@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>產品資訊｜多樂桌遊</title>
+  <meta id="metaDescription" name="description" content="多樂桌遊產品資訊。">
+  <link rel="stylesheet" href="product-style.css">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">跳到主要內容</a>
+
+  <header class="product-header">
+    <div class="product-header-inner">
+      <a class="back-home-link" href="index.html">← 回首頁</a>
+      <span class="header-brand">多樂桌遊產品資訊</span>
+    </div>
+  </header>
+
+  <main id="mainContent" class="product-main">
+    <div id="productContent" hidden>
+      <section class="product-hero">
+        <div class="product-image-panel">
+          <div class="product-image-frame">
+            <img id="productImage" src="" alt="">
+          </div>
+        </div>
+
+        <div class="product-info-panel">
+          <p id="productCode" class="product-code"></p>
+          <h1 id="productName" class="product-title"></h1>
+
+          <!-- V3.2 修正版：這裡顯示遊戲規格，不再顯示詳細介紹 -->
+          <div class="game-specs" aria-label="遊戲資訊">
+            <div class="game-spec-item">
+              <span class="game-spec-icon" aria-hidden="true">👥</span>
+              <span class="game-spec-label">遊戲人數</span>
+              <strong id="productPlayers" class="game-spec-value">—</strong>
+            </div>
+
+            <div class="game-spec-item">
+              <span class="game-spec-icon" aria-hidden="true">⏱️</span>
+              <span class="game-spec-label">遊戲時長</span>
+              <strong id="productDuration" class="game-spec-value">—</strong>
+            </div>
+
+            <div class="game-spec-item">
+              <span class="game-spec-icon" aria-hidden="true">🎂</span>
+              <span class="game-spec-label">建議年齡</span>
+              <strong id="productAge" class="game-spec-value">—</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <div class="content-card">
+          <h2>產品介紹</h2>
+          <div id="productDescription"></div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <div class="content-card">
+          <h2>產品資源</h2>
+          <div class="action-grid">
+            <a id="manualButton" class="action-button primary" href="#" target="_blank" rel="noopener noreferrer" hidden>
+              📥 下載說明書
+            </a>
+            <a id="youtubeButton" class="action-button secondary" href="#" target="_blank" rel="noopener noreferrer" hidden>
+              ▶ 觀看教學影片
+            </a>
+            <p id="noResourceMessage" hidden>目前尚未提供線上說明書或教學影片。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <div class="content-card">
+          <h2>購買方式</h2>
+          <div class="purchase-list">
+            <div class="purchase-item">
+              <strong>蝦皮賣場</strong>
+              <a href="https://shopee.tw/dorahappy2015#product_list" target="_blank" rel="noopener noreferrer">
+                前往多樂桌遊蝦皮賣場
+              </a>
+            </div>
+            <div class="purchase-item">
+              <strong>Facebook 粉絲專頁</strong>
+              <a href="https://www.facebook.com/doraboardgameswh/" target="_blank" rel="noopener noreferrer">
+                私訊多樂桌遊粉絲專頁
+              </a>
+            </div>
+            <div class="purchase-item">
+              <strong>販售狀態提醒</strong>
+              部分產品可能因售罄或絕版而停止販售，如有疑問請私訊粉絲專頁詢問。
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section id="errorState" class="content-section" hidden>
+      <div class="content-card">
+        <h1>找不到這個產品</h1>
+        <p id="errorMessage">網址中的產品代碼不存在，或產品資料尚未載入。</p>
+        <p><a class="action-button primary" href="index.html">← 回到產品首頁</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="product-footer">
+    <div class="product-footer-inner">© <span id="currentYear"></span> 多樂桌遊</div>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" type="button" aria-label="回到頁面頂端" hidden>↑</button>
+
+  <script src="products.js" defer></script>
+  <script src="product-page.js" defer></script>
+</body>
+</html>

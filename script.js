@@ -1,7 +1,11 @@
 /* =========================================================
-   多樂桌遊產品資訊連結系統 V3
+   多樂桌遊產品資訊連結系統 V3.2
    script.js
    依賴：products.js 必須先載入並提供 window.products
+
+   V3.2 重點：
+   - 所有產品頁統一導向 product.html?id=產品代碼
+   - 不再依賴 product_HU001.html 等個別頁面
    ========================================================= */
 
 (() => {
@@ -67,22 +71,36 @@
   function isValidProduct(product) {
     return (
       product &&
+      typeof product.code === "string" &&
+      product.code.trim() &&
       typeof product.name === "string" &&
-      product.name.trim() &&
-      typeof product.page === "string" &&
-      product.page.trim()
+      product.name.trim()
     );
   }
 
   function normalizeProduct(product) {
     return {
-      code: typeof product.code === "string" ? product.code.trim() : "",
-      name: product.name.trim(),
+      code: String(product.code || "").trim(),
+      name: String(product.name || "").trim(),
       image:
         typeof product.image === "string" && product.image.trim()
           ? product.image.trim()
           : "",
-      page: product.page.trim(),
+      summary:
+        typeof product.summary === "string"
+          ? product.summary.trim()
+          : "",
+      description: Array.isArray(product.description)
+        ? product.description
+        : [],
+      manual:
+        typeof product.manual === "string"
+          ? product.manual.trim()
+          : "",
+      youtube:
+        typeof product.youtube === "string"
+          ? product.youtube.trim()
+          : "",
       keywords: Array.isArray(product.keywords)
         ? product.keywords
             .filter(keyword => typeof keyword === "string")
@@ -98,11 +116,13 @@
     elements.clearSearchBtn?.addEventListener("click", resetSearch);
     elements.resetSearchBtn?.addEventListener("click", resetSearch);
     elements.goProductBtn?.addEventListener("click", goToSelectedProduct);
+
     elements.productSelect?.addEventListener("keydown", event => {
       if (event.key === "Enter") {
         goToSelectedProduct();
       }
     });
+
     elements.productSelect?.addEventListener("change", () => {
       elements.goProductBtn?.removeAttribute("disabled");
     });
@@ -122,8 +142,11 @@
 
     state.products.forEach(product => {
       const option = document.createElement("option");
-      option.value = product.page;
+
+      // V3.2：select 的值改成產品代碼
+      option.value = product.code;
       option.textContent = product.name;
+
       elements.productSelect.appendChild(option);
     });
   }
@@ -141,7 +164,7 @@
     const firstProduct = state.filteredProducts[0];
 
     if (firstProduct) {
-      window.location.href = firstProduct.page;
+      goToProduct(firstProduct.code);
     }
   }
 
@@ -172,6 +195,7 @@
     const searchableValues = [
       product.name,
       product.code,
+      product.summary,
       ...product.keywords
     ];
 
@@ -217,17 +241,25 @@
   function createProductCard(product) {
     const link = document.createElement("a");
     link.className = "product-card";
-    link.href = product.page;
-    link.setAttribute("aria-label", `查看${product.name}產品資訊`);
+
+    // V3.2：全部共用 product.html
+    link.href = buildProductUrl(product.code);
+    link.setAttribute(
+      "aria-label",
+      `查看${product.name}產品資訊`
+    );
 
     const imageWrap = document.createElement("div");
     imageWrap.className = "product-image-wrap";
 
     const image = document.createElement("img");
-    image.src = product.image || createFallbackImageDataUri(product.name);
+    image.src =
+      product.image ||
+      createFallbackImageDataUri(product.name);
     image.alt = product.name;
     image.loading = "lazy";
     image.decoding = "async";
+
     image.addEventListener(
       "error",
       () => {
@@ -257,39 +289,28 @@
     return link;
   }
 
-  function createFallbackImageDataUri(productName) {
-    const safeName = escapeSvgText(productName || "產品圖片");
-    const svg = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
-        <defs>
-          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#edf4ff"/>
-            <stop offset="100%" stop-color="#dfe9f7"/>
-          </linearGradient>
-        </defs>
-        <rect width="600" height="600" fill="url(#bg)"/>
-        <text x="300" y="250" text-anchor="middle" font-size="88">🎲</text>
-        <text
-          x="300"
-          y="350"
-          text-anchor="middle"
-          font-size="30"
-          font-family="Arial, sans-serif"
-          fill="#334155"
-        >${safeName}</text>
-      </svg>
-    `;
-
-    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+  function buildProductUrl(productCode) {
+    return `product.html?id=${encodeURIComponent(productCode)}`;
   }
 
-  function escapeSvgText(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&apos;");
+  function goToProduct(productCode) {
+    if (!productCode) {
+      return;
+    }
+
+    window.location.href = buildProductUrl(productCode);
+  }
+
+  function goToSelectedProduct() {
+    const selectedCode = elements.productSelect?.value;
+
+    if (!selectedCode) {
+      window.alert("請先選擇產品。");
+      elements.productSelect?.focus();
+      return;
+    }
+
+    goToProduct(selectedCode);
   }
 
   function updateProductCount(count) {
@@ -311,6 +332,7 @@
     }
 
     const count = state.filteredProducts.length;
+
     elements.searchStatus.textContent =
       count > 0
         ? `「${originalTerm}」找到 ${count} 項產品`
@@ -334,18 +356,6 @@
     applySearch("");
   }
 
-  function goToSelectedProduct() {
-    const selectedPage = elements.productSelect?.value;
-
-    if (!selectedPage) {
-      window.alert("請先選擇產品。");
-      elements.productSelect?.focus();
-      return;
-    }
-
-    window.location.href = selectedPage;
-  }
-
   function setupBackToTop() {
     if (!elements.backToTopBtn) {
       return;
@@ -355,40 +365,59 @@
       elements.backToTopBtn.hidden = window.scrollY < 360;
     };
 
-    window.addEventListener("scroll", toggleButton, { passive: true });
+    window.addEventListener(
+      "scroll",
+      toggleButton,
+      { passive: true }
+    );
 
-    elements.backToTopBtn.addEventListener("click", () => {
-      window.scrollTo({
-        top: 0,
-        behavior: prefersReducedMotion() ? "auto" : "smooth"
-      });
-    });
+    elements.backToTopBtn.addEventListener(
+      "click",
+      () => {
+        window.scrollTo({
+          top: 0,
+          behavior:
+            prefersReducedMotion()
+              ? "auto"
+              : "smooth"
+        });
+      }
+    );
 
     toggleButton();
   }
 
   function prefersReducedMotion() {
-    return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    return window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
   }
 
   function setCurrentYear() {
     if (elements.currentYear) {
-      elements.currentYear.textContent = String(new Date().getFullYear());
+      elements.currentYear.textContent =
+        String(new Date().getFullYear());
     }
   }
 
   function showDataError() {
     if (elements.productGrid) {
       elements.productGrid.hidden = true;
-      elements.productGrid.setAttribute("aria-busy", "false");
+      elements.productGrid.setAttribute(
+        "aria-busy",
+        "false"
+      );
     }
 
     if (elements.emptyState) {
       elements.emptyState.hidden = false;
 
-      const heading = elements.emptyState.querySelector("h3");
-      const paragraph = elements.emptyState.querySelector("p");
-      const button = elements.emptyState.querySelector("button");
+      const heading =
+        elements.emptyState.querySelector("h3");
+      const paragraph =
+        elements.emptyState.querySelector("p");
+      const button =
+        elements.emptyState.querySelector("button");
 
       if (heading) {
         heading.textContent = "產品資料尚未載入";
@@ -396,7 +425,7 @@
 
       if (paragraph) {
         paragraph.textContent =
-          "請確認 products.js 已放在與 index.html 相同的資料夾，且檔案內容格式正確。";
+          "請確認 products.js 已放在與 index.html 相同的資料夾，且產品資料包含 code 與 name。";
       }
 
       if (button) {
@@ -416,7 +445,8 @@
 
     if (elements.searchInput) {
       elements.searchInput.disabled = true;
-      elements.searchInput.placeholder = "產品資料尚未載入";
+      elements.searchInput.placeholder =
+        "產品資料尚未載入";
     }
 
     if (elements.productCount) {
@@ -427,5 +457,75 @@
       elements.searchStatus.textContent =
         "找不到 products.js 提供的產品資料。";
     }
+  }
+
+  function createFallbackImageDataUri(productName) {
+    const safeName = escapeSvgText(
+      productName || "產品圖片"
+    );
+
+    const svg = `
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="600"
+        height="600"
+        viewBox="0 0 600 600"
+      >
+        <defs>
+          <linearGradient
+            id="bg"
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="1"
+          >
+            <stop
+              offset="0%"
+              stop-color="#edf4ff"
+            />
+            <stop
+              offset="100%"
+              stop-color="#dfe9f7"
+            />
+          </linearGradient>
+        </defs>
+
+        <rect
+          width="600"
+          height="600"
+          fill="url(#bg)"
+        />
+
+        <text
+          x="300"
+          y="250"
+          text-anchor="middle"
+          font-size="88"
+        >🎲</text>
+
+        <text
+          x="300"
+          y="350"
+          text-anchor="middle"
+          font-size="30"
+          font-family="Arial, sans-serif"
+          fill="#334155"
+        >${safeName}</text>
+      </svg>
+    `;
+
+    return (
+      "data:image/svg+xml;charset=UTF-8," +
+      encodeURIComponent(svg)
+    );
+  }
+
+  function escapeSvgText(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&apos;");
   }
 })();

@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    多樂桌遊產品頁 V3 共用樣式
    product-style.css
    ========================================================= */
@@ -427,5 +427,71 @@ a {
   .product-info-panel,
   .content-card {
     box-shadow: none;
+  }
+}
+
+/* =========================================================
+   V3.2 遊戲規格區塊
+   請加到 product-style.css 最後
+   ========================================================= */
+
+.game-specs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.game-spec-item {
+  min-width: 0;
+  padding: 14px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+  text-align: center;
+}
+
+.game-spec-icon {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.game-spec-label {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.game-spec-value {
+  display: block;
+  margin-top: 4px;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 430px) {
+  .game-specs {
+    gap: 7px;
+  }
+
+  .game-spec-item {
+    padding: 11px 6px;
+  }
+
+  .game-spec-icon {
+    font-size: 21px;
+  }
+
+  .game-spec-label {
+    font-size: 12px;
+  }
+
+  .game-spec-value {
+    font-size: 14px;
   }
 }
