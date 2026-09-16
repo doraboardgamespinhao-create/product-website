@@ -1,7 +1,7 @@
-﻿/* =========================================================
+/* =========================================================
    多樂桌遊產品資訊連結系統
 
-   script.js V4－首頁載入效能優化版
+   script.js V5－首頁縮圖與 LCP 優化版
 
    ---------------------------------------------------------
    V4 重點：
@@ -272,8 +272,14 @@
                     );
 
 
-                image.src =
-                    product.image || "";
+                // 首頁使用 400px 縮圖；產品詳細頁仍使用 products.js 的原圖。
+                const originalImage = product.image || "";
+                const thumbnailImage = originalImage.replace(
+                    /^(images\/)([^/]+\.webp)$/i,
+                    "$1thumbs/$2"
+                );
+
+                image.src = thumbnailImage;
 
 
                 image.alt =
@@ -316,8 +322,10 @@
                        這些圖片較重要
                     */
 
+                    // 只將預設首頁的第一張 LCP 圖片設為 high，
+                    // 避免其他圖片與它爭搶下載頻寬。
                     image.fetchPriority =
-                        "high";
+                        (!query && index === 0) ? "high" : "auto";
 
                 } else {
 
@@ -352,6 +360,11 @@
                            難看的破圖圖示
                         */
 
+                        // 縮圖遺漏時退回原圖，不讓整張產品卡片破圖。
+                        if (image.src !== new URL(originalImage, document.baseURI).href && originalImage) {
+                            image.src = originalImage;
+                            return;
+                        }
                         image.style.display =
                             "none";
 
@@ -367,9 +380,6 @@
                         );
 
                     },
-                    {
-                        once: true
-                    }
                 );
 
 

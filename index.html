@@ -10,6 +10,8 @@
     content="多樂桌遊產品資訊連結系統，可搜尋產品、使用下拉選單或點擊產品圖片前往產品介紹頁。"
   >
 
+  <!-- V5: 讓瀏覽器在執行 JavaScript 前發現首頁 LCP 縮圖。 -->
+  <link rel="preload" as="image" href="images/thumbs/AS001.webp" fetchpriority="high">
   <link rel="stylesheet" href="style.css">
 </head>
 
