@@ -1,39 +1,21 @@
 ﻿/* =========================================================
    多樂桌遊產品資訊連結系統
-   V3.2 搜尋體驗升級
 
-   script.js V3－搜尋體驗升級版
-
-   ---------------------------------------------------------
-   首頁產品卡片結構：
-
-   .product-card
-       .product-image-wrap
-           img
-       .product-card-body
-           .product-card-title
-               產品名稱
-               .product-card-code
-                   產品編號
+   script.js V4－首頁載入效能優化版
 
    ---------------------------------------------------------
-   V3 功能：
+   V4 重點：
 
-   1. 顯示全部產品
-   2. 產品名稱搜尋
-   3. 產品編號搜尋
-   4. keywords 搜尋
-   5. 多搜尋詞
-   6. 搜尋相關度排序
-   7. 搜尋文字醒目標示
-   8. 下拉選單同步搜尋結果
-   9. 清除搜尋
-   10. 找不到產品提示
-   11. Enter 單一結果快速進入
-   12. Escape 清除搜尋
-   13. Lazy Loading
-   14. 回到頂端
-   15. Footer 年份
+   1. 完整保留 V3 搜尋功能
+   2. 完整保留搜尋高光
+   3. 完整保留下拉選單同步搜尋
+   4. 首屏圖片優先載入
+   5. 其餘圖片 Lazy Loading
+   6. 圖片 decoding="async"
+   7. 首屏圖片 fetchPriority="high"
+   8. 圖片錯誤時避免顯示破圖圖示
+   9. 使用 DocumentFragment 降低 DOM 更新次數
+   10. 保留目前產品卡片 CSS 結構
    ========================================================= */
 
 (() => {
@@ -86,7 +68,7 @@
 
 
         /* ---------------------------------------------
-           建立功能
+           建立各項功能
            --------------------------------------------- */
 
         setupCurrentYear();
@@ -107,6 +89,64 @@
         setupBackToTop();
 
         updateSearchStatus("");
+
+    }
+
+
+
+    /* =====================================================
+       V4：
+       判斷首屏優先載入圖片數量
+       ===================================================== */
+
+    function getPriorityImageCount() {
+
+        const width =
+            window.innerWidth;
+
+
+        /*
+           手機
+           2 欄 × 約 2 排
+        */
+
+        if (width < 600) {
+
+            return 4;
+
+        }
+
+
+        /*
+           平板
+           3 欄 × 約 2 排
+        */
+
+        if (width < 900) {
+
+            return 6;
+
+        }
+
+
+        /*
+           一般桌機
+           4 欄 × 約 2 排
+        */
+
+        if (width < 1180) {
+
+            return 8;
+
+        }
+
+
+        /*
+           寬桌機
+           5 欄 × 約 2 排
+        */
+
+        return 10;
 
     }
 
@@ -164,185 +204,293 @@
         }
 
 
+        /* ---------------------------------------------
+           V4：
+           取得目前螢幕應優先載入幾張圖片
+           --------------------------------------------- */
+
+        const priorityImageCount =
+            getPriorityImageCount();
+
+
         const fragment =
             document.createDocumentFragment();
+
 
 
         /* ---------------------------------------------
            建立每張產品卡片
            --------------------------------------------- */
 
-        productList.forEach(product => {
+        productList.forEach(
+            (product, index) => {
 
 
-            /* =========================================
-               整張卡片
-               ========================================= */
+                /* =====================================
+                   整張產品卡片
+                   ===================================== */
 
-            const card =
-                document.createElement("a");
-
-
-            card.className =
-                "product-card";
-
-
-            card.href =
-                getProductUrl(product);
-
-
-
-            /* =========================================
-               圖片區
-               ========================================= */
-
-            const imageWrap =
-                document.createElement("div");
-
-
-            imageWrap.className =
-                "product-image-wrap";
-
-
-            const image =
-                document.createElement("img");
-
-
-            image.src =
-                product.image || "";
-
-
-            image.alt =
-                product.name
-                    ? `${product.name} 產品圖片`
-                    : "產品圖片";
-
-
-            image.loading =
-                "lazy";
-
-
-            image.decoding =
-                "async";
-
-
-            image.addEventListener(
-                "error",
-                () => {
-
-                    image.alt =
-                        product.name
-                            ? `${product.name} 圖片載入失敗`
-                            : "產品圖片載入失敗";
-
-                }
-            );
-
-
-            imageWrap.appendChild(
-                image
-            );
-
-
-
-            /* =========================================
-               文字區
-               ========================================= */
-
-            const body =
-                document.createElement("div");
-
-
-            body.className =
-                "product-card-body";
-
-
-
-            /* =========================================
-               產品名稱
-               ========================================= */
-
-            const title =
-                document.createElement("p");
-
-
-            title.className =
-                "product-card-title";
-
-
-            appendHighlightedText(
-                title,
-                product.name ||
-                    "未命名產品",
-                query
-            );
-
-
-
-            /* =========================================
-               產品編號
-               ========================================= */
-
-            if (product.code) {
-
-                const code =
+                const card =
                     document.createElement(
-                        "span"
+                        "a"
                     );
 
 
-                code.className =
-                    "product-card-code";
+                card.className =
+                    "product-card";
+
+
+                card.href =
+                    getProductUrl(
+                        product
+                    );
+
+
+
+                /* =====================================
+                   圖片外框
+                   ===================================== */
+
+                const imageWrap =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                imageWrap.className =
+                    "product-image-wrap";
+
+
+
+                /* =====================================
+                   產品圖片
+                   ===================================== */
+
+                const image =
+                    document.createElement(
+                        "img"
+                    );
+
+
+                image.src =
+                    product.image || "";
+
+
+                image.alt =
+                    product.name
+                        ? `${product.name} 產品圖片`
+                        : "產品圖片";
 
 
                 /*
-                   只顯示：
-
-                   AS001
-
-                   不顯示：
-                   產品編號：AS001
+                   所有圖片皆採非同步解碼
                 */
 
-                appendHighlightedText(
-                    code,
-                    product.code,
-                    query
+                image.decoding =
+                    "async";
+
+
+
+                /* =====================================
+                   V4：
+                   首屏圖片載入策略
+                   ===================================== */
+
+                if (
+                    index <
+                    priorityImageCount
+                ) {
+
+                    /*
+                       首頁最前面的圖片：
+
+                       不等待 Lazy Loading
+                    */
+
+                    image.loading =
+                        "eager";
+
+
+                    /*
+                       告訴瀏覽器：
+                       這些圖片較重要
+                    */
+
+                    image.fetchPriority =
+                        "high";
+
+                } else {
+
+                    /*
+                       後面的產品圖片：
+
+                       捲動接近時才載入
+                    */
+
+                    image.loading =
+                        "lazy";
+
+
+                    image.fetchPriority =
+                        "auto";
+
+                }
+
+
+
+                /* =====================================
+                   V4：
+                   圖片載入失敗處理
+                   ===================================== */
+
+                image.addEventListener(
+                    "error",
+                    () => {
+
+                        /*
+                           避免瀏覽器顯示
+                           難看的破圖圖示
+                        */
+
+                        image.style.display =
+                            "none";
+
+
+                        /*
+                           保留圖片容器，
+                           所以產品卡片不會塌掉
+                        */
+
+                        imageWrap.setAttribute(
+                            "data-image-error",
+                            "true"
+                        );
+
+                    },
+                    {
+                        once: true
+                    }
                 );
 
 
-                title.appendChild(
-                    code
+                imageWrap.appendChild(
+                    image
+                );
+
+
+
+                /* =====================================
+                   產品文字區
+                   ===================================== */
+
+                const body =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                body.className =
+                    "product-card-body";
+
+
+
+                /* =====================================
+                   產品名稱
+                   ===================================== */
+
+                const title =
+                    document.createElement(
+                        "p"
+                    );
+
+
+                title.className =
+                    "product-card-title";
+
+
+                appendHighlightedText(
+
+                    title,
+
+                    product.name ||
+                        "未命名產品",
+
+                    query
+
+                );
+
+
+
+                /* =====================================
+                   產品編號
+                   ===================================== */
+
+                if (product.code) {
+
+                    const code =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    code.className =
+                        "product-card-code";
+
+
+                    /*
+                       只顯示：
+
+                       AS001
+
+                       不顯示：
+
+                       產品編號：AS001
+                    */
+
+                    appendHighlightedText(
+
+                        code,
+
+                        product.code,
+
+                        query
+
+                    );
+
+
+                    title.appendChild(
+                        code
+                    );
+
+                }
+
+
+
+                /* =====================================
+                   組合產品卡片
+                   ===================================== */
+
+                body.appendChild(
+                    title
+                );
+
+
+                card.appendChild(
+                    imageWrap
+                );
+
+
+                card.appendChild(
+                    body
+                );
+
+
+                fragment.appendChild(
+                    card
                 );
 
             }
-
-
-
-            /* =========================================
-               組合卡片
-               ========================================= */
-
-            body.appendChild(
-                title
-            );
-
-
-            card.appendChild(
-                imageWrap
-            );
-
-
-            card.appendChild(
-                body
-            );
-
-
-            fragment.appendChild(
-                card
-            );
-
-        });
+        );
 
 
 
@@ -366,7 +514,7 @@
 
 
         /* ---------------------------------------------
-           更新數量
+           更新產品數量
            --------------------------------------------- */
 
         updateProductCount(
@@ -391,10 +539,9 @@
             String(text ?? "");
 
 
-        /*
-           沒有搜尋文字時，
-           直接顯示原文字
-        */
+        /* ---------------------------------------------
+           沒有搜尋文字
+           --------------------------------------------- */
 
         if (!query) {
 
@@ -405,10 +552,6 @@
 
         }
 
-
-        /*
-           將搜尋詞拆開
-        */
 
         const terms =
             normalize(query)
@@ -426,28 +569,28 @@
         }
 
 
-        /*
-           建立用來尋找位置的
-           標準化文字
-        */
-
         const normalizedText =
-            normalize(originalText);
+            normalize(
+                originalText
+            );
 
-
-        /*
-           搜集所有需要標記的位置
-        */
 
         const ranges = [];
 
+
+        /* ---------------------------------------------
+           找出所有需要高光的位置
+           --------------------------------------------- */
 
         terms.forEach(term => {
 
             let startIndex = 0;
 
 
-            while (startIndex < normalizedText.length) {
+            while (
+                startIndex <
+                normalizedText.length
+            ) {
 
                 const foundIndex =
                     normalizedText.indexOf(
@@ -456,8 +599,12 @@
                     );
 
 
-                if (foundIndex === -1) {
+                if (
+                    foundIndex === -1
+                ) {
+
                     break;
+
                 }
 
 
@@ -482,12 +629,11 @@
         });
 
 
-        /*
-           沒有直接出現在名稱或編號中。
 
-           例如是透過 keywords 搜尋到的產品，
-           就不需要標記名稱。
-        */
+        /* ---------------------------------------------
+           例如透過 keywords 找到產品，
+           但名稱本身沒有搜尋文字
+           --------------------------------------------- */
 
         if (!ranges.length) {
 
@@ -499,19 +645,22 @@
         }
 
 
-        /*
+
+        /* ---------------------------------------------
            排序
-        */
+           --------------------------------------------- */
 
         ranges.sort(
             (a, b) =>
-                a.start - b.start
+                a.start -
+                b.start
         );
 
 
-        /*
+
+        /* ---------------------------------------------
            合併重疊範圍
-        */
+           --------------------------------------------- */
 
         const mergedRanges = [];
 
@@ -526,7 +675,8 @@
 
             if (
                 previous &&
-                range.start <= previous.end
+                range.start <=
+                previous.end
             ) {
 
                 previous.end =
@@ -538,8 +688,13 @@
             } else {
 
                 mergedRanges.push({
-                    start: range.start,
-                    end: range.end
+
+                    start:
+                        range.start,
+
+                    end:
+                        range.end
+
                 });
 
             }
@@ -547,20 +702,25 @@
         });
 
 
-        /*
-           建立文字 + mark
-        */
+
+        /* ---------------------------------------------
+           建立文字與 mark
+           --------------------------------------------- */
 
         let lastIndex = 0;
 
 
         mergedRanges.forEach(range => {
 
-            /*
-               標記前的普通文字
-            */
 
-            if (range.start > lastIndex) {
+            /* =========================================
+               高光前面的普通文字
+               ========================================= */
+
+            if (
+                range.start >
+                lastIndex
+            ) {
 
                 container.appendChild(
 
@@ -578,9 +738,10 @@
             }
 
 
-            /*
-               醒目文字
-            */
+
+            /* =========================================
+               高光文字
+               ========================================= */
 
             const mark =
                 document.createElement(
@@ -610,9 +771,10 @@
         });
 
 
-        /*
+
+        /* ---------------------------------------------
            最後剩下的普通文字
-        */
+           --------------------------------------------- */
 
         if (
             lastIndex <
@@ -654,14 +816,6 @@
         }
 
 
-        /*
-           沒有搜尋時：
-           共 43 項產品
-
-           搜尋時：
-           共 3 項產品
-        */
-
         element.textContent =
             `共 ${count} 項產品`;
 
@@ -670,7 +824,7 @@
 
 
     /* =====================================================
-       搜尋設定
+       搜尋功能
        ===================================================== */
 
     function setupSearch() {
@@ -741,7 +895,7 @@
 
 
         /* ---------------------------------------------
-           查無資料：
+           找不到產品：
            顯示全部產品
            --------------------------------------------- */
 
@@ -763,7 +917,7 @@
 
 
         /* ---------------------------------------------
-           鍵盤功能
+           鍵盤操作
            --------------------------------------------- */
 
         input.addEventListener(
@@ -772,11 +926,13 @@
 
 
                 /* =====================================
-                   Escape
-                   清除搜尋
+                   Escape 清除搜尋
                    ===================================== */
 
-                if (event.key === "Escape") {
+                if (
+                    event.key ===
+                    "Escape"
+                ) {
 
                     clearSearch();
 
@@ -787,17 +943,19 @@
                 }
 
 
-                /* =====================================
-                   Enter
 
+                /* =====================================
+                   Enter：
                    只有一個結果時
-                   直接進入產品頁
+                   直接進產品頁
                    ===================================== */
 
                 if (
-                    event.key === "Enter" &&
+                    event.key ===
+                        "Enter" &&
                     currentQuery &&
-                    currentResults.length === 1
+                    currentResults.length ===
+                        1
                 ) {
 
                     event.preventDefault();
@@ -815,7 +973,7 @@
 
 
         /* ---------------------------------------------
-           清除按鈕顯示狀態
+           更新 × 按鈕
            --------------------------------------------- */
 
         function updateClearButton() {
@@ -838,10 +996,12 @@
 
         function clearSearch() {
 
-            input.value = "";
+            input.value =
+                "";
 
 
-            currentQuery = "";
+            currentQuery =
+                "";
 
 
             currentResults =
@@ -849,7 +1009,7 @@
 
 
             /*
-               恢復全部卡片
+               恢復全部產品
             */
 
             renderProductCards(
@@ -910,7 +1070,7 @@
 
 
         /* ---------------------------------------------
-           沒有搜尋文字
+           空白搜尋
            --------------------------------------------- */
 
         if (!query) {
@@ -942,7 +1102,7 @@
 
 
         /* ---------------------------------------------
-           執行搜尋
+           搜尋產品
            --------------------------------------------- */
 
         currentResults =
@@ -964,7 +1124,6 @@
 
 
         /* ---------------------------------------------
-           V3：
            同步更新下拉選單
            --------------------------------------------- */
 
@@ -975,7 +1134,7 @@
 
 
         /* ---------------------------------------------
-           更新搜尋狀態
+           更新搜尋結果文字
            --------------------------------------------- */
 
         updateSearchStatus(
@@ -1000,164 +1159,135 @@
 
         return products
 
-            .map((product, index) => {
+            .map(
+                (product, index) => {
 
 
-                /* -----------------------------------------
-                   產品名稱
-                   ----------------------------------------- */
-
-                const name =
-                    normalize(
-                        product.name
-                    );
+                    const name =
+                        normalize(
+                            product.name
+                        );
 
 
-                /* -----------------------------------------
-                   產品編號
-                   ----------------------------------------- */
-
-                const code =
-                    normalize(
-                        product.code
-                    );
+                    const code =
+                        normalize(
+                            product.code
+                        );
 
 
-                /* -----------------------------------------
-                   Keywords
-                   ----------------------------------------- */
-
-                const keywords =
-                    Array.isArray(
-                        product.keywords
-                    )
-
-                        ? product.keywords
-                            .map(normalize)
-                            .filter(Boolean)
-
-                        : [];
-
-
-
-                /* -----------------------------------------
-                   可以搜尋的全部文字
-                   ----------------------------------------- */
-
-                const searchableValues = [
-
-                    name,
-
-                    code,
-
-                    ...keywords
-
-                ];
-
-
-
-                /* -----------------------------------------
-                   多個搜尋詞：
-
-                   每一個詞都必須至少符合
-                   一個欄位
-                   ----------------------------------------- */
-
-                const matched =
-                    terms.every(term =>
-
-                        searchableValues.some(
-                            value =>
-                                value.includes(term)
+                    const keywords =
+                        Array.isArray(
+                            product.keywords
                         )
 
-                    );
+                            ? product.keywords
+                                .map(
+                                    normalize
+                                )
+                                .filter(
+                                    Boolean
+                                )
+
+                            : [];
 
 
-                if (!matched) {
-                    return null;
-                }
-
-
-
-                /* -----------------------------------------
-                   計算相關度
-                   ----------------------------------------- */
-
-                const score =
-                    calculateScore(
+                    const searchableValues = [
 
                         name,
 
                         code,
 
-                        keywords,
+                        ...keywords
 
-                        terms
-
-                    );
+                    ];
 
 
-                return {
 
-                    product,
+                    /* ---------------------------------
+                       每一個搜尋詞都必須符合
+                       --------------------------------- */
 
-                    score,
+                    const matched =
+                        terms.every(
+                            term =>
 
-                    originalIndex:
-                        index
+                                searchableValues.some(
+                                    value =>
+                                        value.includes(
+                                            term
+                                        )
+                                )
 
-                };
-
-            })
+                        );
 
 
-            /* -----------------------------------------
-               移除不符合產品
-               ----------------------------------------- */
+                    if (!matched) {
 
-            .filter(Boolean)
+                        return null;
+
+                    }
+
+
+
+                    return {
+
+                        product,
+
+                        originalIndex:
+                            index,
+
+                        score:
+                            calculateScore(
+
+                                name,
+
+                                code,
+
+                                keywords,
+
+                                terms
+
+                            )
+
+                    };
+
+                }
+            )
+
+
+            .filter(
+                Boolean
+            )
 
 
             /* -----------------------------------------
                相關度排序
                ----------------------------------------- */
 
-            .sort((a, b) => {
+            .sort(
+                (a, b) => {
 
-                /*
-                   分數高的優先
-                */
+                    if (
+                        b.score !==
+                        a.score
+                    ) {
 
-                if (
-                    b.score !==
-                    a.score
-                ) {
+                        return (
+                            b.score -
+                            a.score
+                        );
+
+                    }
+
 
                     return (
-                        b.score -
-                        a.score
+                        a.originalIndex -
+                        b.originalIndex
                     );
 
                 }
+            )
 
-
-                /*
-                   分數相同時，
-                   維持 products.js 原順序
-                */
-
-                return (
-                    a.originalIndex -
-                    b.originalIndex
-                );
-
-            })
-
-
-            /* -----------------------------------------
-               只取產品
-               ----------------------------------------- */
 
             .map(
                 item =>
@@ -1185,96 +1315,122 @@
         terms.forEach(term => {
 
 
-            /* =========================================
+            /* -----------------------------------------
                產品名稱
-               ========================================= */
+               ----------------------------------------- */
 
-            if (name === term) {
+            if (
+                name === term
+            ) {
 
-                score += 1000;
+                score +=
+                    1000;
 
             }
 
             else if (
-                name.startsWith(term)
+                name.startsWith(
+                    term
+                )
             ) {
 
-                score += 700;
+                score +=
+                    700;
 
             }
 
             else if (
-                name.includes(term)
+                name.includes(
+                    term
+                )
             ) {
 
-                score += 500;
+                score +=
+                    500;
 
             }
 
 
 
-            /* =========================================
+            /* -----------------------------------------
                產品編號
-               ========================================= */
+               ----------------------------------------- */
 
-            if (code === term) {
+            if (
+                code === term
+            ) {
 
-                score += 900;
+                score +=
+                    900;
 
             }
 
             else if (
-                code.startsWith(term)
+                code.startsWith(
+                    term
+                )
             ) {
 
-                score += 600;
+                score +=
+                    600;
 
             }
 
             else if (
-                code.includes(term)
+                code.includes(
+                    term
+                )
             ) {
 
-                score += 400;
+                score +=
+                    400;
 
             }
 
 
 
-            /* =========================================
+            /* -----------------------------------------
                Keywords
-               ========================================= */
+               ----------------------------------------- */
 
             if (
                 keywords.some(
                     keyword =>
-                        keyword === term
+                        keyword ===
+                        term
                 )
             ) {
 
-                score += 350;
+                score +=
+                    350;
 
             }
 
             else if (
                 keywords.some(
                     keyword =>
-                        keyword.startsWith(term)
+                        keyword.startsWith(
+                            term
+                        )
                 )
             ) {
 
-                score += 250;
+                score +=
+                    250;
 
             }
 
             else if (
                 keywords.some(
                     keyword =>
-                        keyword.includes(term)
+                        keyword.includes(
+                            term
+                        )
                 )
             ) {
 
-                score += 150;
+                score +=
+                    150;
 
             }
 
@@ -1299,14 +1455,11 @@
 
             /*
                全形 / 半形統一
-
-               ＡＳ００１
-               AS001
-
-               可以視為相同
             */
 
-            .normalize("NFKC")
+            .normalize(
+                "NFKC"
+            )
 
 
             /*
@@ -1317,14 +1470,14 @@
 
 
             /*
-               去除前後空白
+               去除前後空格
             */
 
             .trim()
 
 
             /*
-               多個空格變成一個
+               多個空格變一個
             */
 
             .replace(
@@ -1388,7 +1541,8 @@
            --------------------------------------------- */
 
         if (
-            currentResults.length > 0
+            currentResults.length >
+            0
         ) {
 
             if (status) {
@@ -1455,19 +1609,12 @@
         }
 
 
-        /*
-           記住目前選擇
-        */
-
         const previousValue =
             select.value;
 
 
-        /*
-           清除全部 option
-        */
-
-        select.innerHTML = "";
+        select.innerHTML =
+            "";
 
 
 
@@ -1481,16 +1628,14 @@
             );
 
 
-        placeholder.value = "";
+        placeholder.value =
+            "";
 
-
-        /*
-           搜尋後沒有產品
-        */
 
         if (
             currentQuery &&
-            productList.length === 0
+            productList.length ===
+                0
         ) {
 
             placeholder.textContent =
@@ -1498,20 +1643,14 @@
 
         }
 
-        /*
-           搜尋中
-        */
-
-        else if (currentQuery) {
+        else if (
+            currentQuery
+        ) {
 
             placeholder.textContent =
                 `搜尋結果（${productList.length}）`;
 
         }
-
-        /*
-           一般狀態
-        */
 
         else {
 
@@ -1528,73 +1667,68 @@
 
 
         /* ---------------------------------------------
-           建立產品選項
+           建立選項
            --------------------------------------------- */
 
         const fragment =
             document.createDocumentFragment();
 
 
-        productList.forEach(product => {
+        productList.forEach(
+            product => {
 
-            const option =
-                document.createElement(
-                    "option"
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    product.code || "";
+
+
+                if (
+                    product.name &&
+                    product.code
+                ) {
+
+                    option.textContent =
+                        `${product.name} (${product.code})`;
+
+                }
+
+                else {
+
+                    option.textContent =
+                        product.name ||
+                        product.code ||
+                        "未命名產品";
+
+                }
+
+
+
+                /* -------------------------------------
+                   保留目前選擇
+                   ------------------------------------- */
+
+                if (
+                    product.code ===
+                    previousValue
+                ) {
+
+                    option.selected =
+                        true;
+
+                }
+
+
+                fragment.appendChild(
+                    option
                 );
 
-
-            option.value =
-                product.code || "";
-
-
-            /*
-               下拉選單顯示：
-
-               幻界之爭 (AS001)
-            */
-
-            if (
-                product.name &&
-                product.code
-            ) {
-
-                option.textContent =
-                    `${product.name} (${product.code})`;
-
             }
-
-            else {
-
-                option.textContent =
-                    product.name ||
-                    product.code ||
-                    "未命名產品";
-
-            }
-
-
-            /*
-               如果原本選擇的產品
-               仍存在於目前結果，
-               保留選擇
-            */
-
-            if (
-                product.code ===
-                previousValue
-            ) {
-
-                option.selected =
-                    true;
-
-            }
-
-
-            fragment.appendChild(
-                option
-            );
-
-        });
+        );
 
 
         select.appendChild(
@@ -1630,7 +1764,7 @@
 
 
         /* ---------------------------------------------
-           選擇產品後直接進入
+           選擇產品
            --------------------------------------------- */
 
         select.addEventListener(
@@ -1652,7 +1786,7 @@
 
 
         /* ---------------------------------------------
-           「前往產品頁」按鈕
+           前往產品頁按鈕
            --------------------------------------------- */
 
         if (button) {
@@ -1716,7 +1850,9 @@
     function goToProduct(product) {
 
         const url =
-            getProductUrl(product);
+            getProductUrl(
+                product
+            );
 
 
         if (
@@ -1806,13 +1942,14 @@
 
 
         /* ---------------------------------------------
-           控制顯示 / 隱藏
+           顯示 / 隱藏
            --------------------------------------------- */
 
         function updateButton() {
 
             button.hidden =
-                window.scrollY <= 300;
+                window.scrollY <=
+                300;
 
         }
 
