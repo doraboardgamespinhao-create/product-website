@@ -1,9 +1,9 @@
-/* 多樂桌遊 V3.2 規格修正版產品資料 */
+﻿/* 多樂桌遊 V3.2 規格修正版產品資料 */
 window.products = [
   {
     "code": "AS001",
     "name": "幻界之爭",
-    "image": "images/AS001.jpg",
+    "image": "images/AS001.webp",
     "players": "２－６人",
     "duration": "４５－６０分鐘",
     "age": "１４歲以上",
@@ -24,7 +24,7 @@ window.products = [
   {
     "code": "DK001",
     "name": "奶酪大盜",
-    "image": "images/DK001.jpg",
+    "image": "images/DK001.webp",
     "players": "４－８人",
     "duration": "１０－１５分鐘",
     "age": "８歲以上",
@@ -43,7 +43,7 @@ window.products = [
   {
     "code": "ETN001-TCN",
     "name": "幻界之爭：第２版",
-    "image": "images/ETN001-TCN.jpg",
+    "image": "images/ETN001-TCN.webp",
     "players": "１－６人",
     "duration": "４５分鐘",
     "age": "１４歲以上",
@@ -65,7 +65,7 @@ window.products = [
   {
     "code": "FU001",
     "name": "巨獸大聯盟",
-    "image": "images/FU001.jpg",
+    "image": "images/FU001.webp",
     "players": "２－６人",
     "duration": "３０分鐘",
     "age": "８歲以上",
@@ -86,7 +86,7 @@ window.products = [
   {
     "code": "HU001",
     "name": "飛龍傳說",
-    "image": "images/HU001.jpg",
+    "image": "images/HU001.webp",
     "players": "２人",
     "duration": "２０分鐘",
     "age": "１０歲以上",
@@ -106,7 +106,7 @@ window.products = [
   {
     "code": "HU002",
     "name": "塔拉特",
-    "image": "images/HU002.jpg",
+    "image": "images/HU002.webp",
     "players": "２－３人",
     "duration": "３３分鐘",
     "age": "８歲以上",
@@ -127,7 +127,7 @@ window.products = [
   {
     "code": "HU003",
     "name": "水火不容",
-    "image": "images/HU003.jpg",
+    "image": "images/HU003.webp",
     "players": "２人",
     "duration": "２０分鐘",
     "age": "８歲以上",
@@ -148,7 +148,7 @@ window.products = [
   {
     "code": "HU004",
     "name": "大五月花號",
-    "image": "images/HU004.jpg",
+    "image": "images/HU004.webp",
     "players": "２－６人",
     "duration": "９０－１２０分鐘",
     "age": "１３歲以上",
@@ -173,7 +173,7 @@ window.products = [
   {
     "code": "HU005",
     "name": "大五月花號：農夫擴充",
-    "image": "images/HU005.jpg",
+    "image": "images/HU005.webp",
     "players": "２－６人",
     "duration": "９０－１２０分鐘",
     "age": "１４歲以上",
@@ -197,7 +197,7 @@ window.products = [
   {
     "code": "HU006",
     "name": "圖拉真",
-    "image": "images/HU006.jpg",
+    "image": "images/HU006.webp",
     "players": "２－４人",
     "duration": "６０－１２０分鐘",
     "age": "１３歲以上",
@@ -217,7 +217,7 @@ window.products = [
   {
     "code": "HU007",
     "name": "視覺運動會（進階）",
-    "image": "images/HU007.jpg",
+    "image": "images/HU007.webp",
     "players": "１－６人",
     "duration": "２０分鐘",
     "age": "７歲以上",
@@ -238,7 +238,7 @@ window.products = [
   {
     "code": "HU008",
     "name": "視覺運動會",
-    "image": "images/HU008.jpg",
+    "image": "images/HU008.webp",
     "players": "１－６人",
     "duration": "２０分鐘",
     "age": "７歲以上",
@@ -258,7 +258,7 @@ window.products = [
   {
     "code": "HU009",
     "name": "毛納基火山",
-    "image": "images/HU009.jpg",
+    "image": "images/HU009.webp",
     "players": "２－４人",
     "duration": "３０－４５分鐘",
     "age": "１０歲以上",
@@ -278,7 +278,7 @@ window.products = [
   {
     "code": "HU010",
     "name": "巫毒娃娃",
-    "image": "images/HU010.jpg",
+    "image": "images/HU010.webp",
     "players": "２－６人",
     "duration": "２０分鐘",
     "age": "７歲以上",
@@ -297,7 +297,7 @@ window.products = [
   {
     "code": "HU011",
     "name": "狐狸與雞",
-    "image": "images/HU011.jpg",
+    "image": "images/HU011.webp",
     "players": "７－４１人",
     "duration": "２０分鐘",
     "age": "８歲以上",
@@ -318,7 +318,7 @@ window.products = [
   {
     "code": "HU012",
     "name": "挖到寶",
-    "image": "images/HU012.jpg",
+    "image": "images/HU012.webp",
     "players": "２－４人",
     "duration": "２０分鐘",
     "age": "１０歲以上",
@@ -341,7 +341,7 @@ window.products = [
   {
     "code": "HU013",
     "name": "殭屍小怪獸",
-    "image": "images/HU013.jpg",
+    "image": "images/HU013.webp",
     "players": "２－４人",
     "duration": "２０分鐘",
     "age": "８歲以上",
@@ -360,7 +360,7 @@ window.products = [
   {
     "code": "HU014",
     "name": "拍照里歐",
-    "image": "images/HU014.jpg",
+    "image": "images/HU014.webp",
     "players": "２－４人",
     "duration": "１５分鐘",
     "age": "５歲以上",
@@ -382,7 +382,7 @@ window.products = [
   {
     "code": "HU015",
     "name": "大五月花號：商人擴充",
-    "image": "images/HU015.jpg",
+    "image": "images/HU015.webp",
     "players": "２－６人",
     "duration": "９０－１２０分鐘",
     "age": "１４歲以上",
@@ -406,7 +406,7 @@ window.products = [
   {
     "code": "HU016",
     "name": "神祕卡納克",
-    "image": "images/HU016.jpg",
+    "image": "images/HU016.webp",
     "players": "２人",
     "duration": "２０分鐘",
     "age": "８歲以上",
@@ -429,7 +429,7 @@ window.products = [
   {
     "code": "HU017",
     "name": "飛龍傳說：口袋版",
-    "image": "images/HU017.jpg",
+    "image": "images/HU017.webp",
     "players": "２人",
     "duration": "２０分鐘",
     "age": "１０歲以上",
@@ -451,7 +451,7 @@ window.products = [
   {
     "code": "HU018",
     "name": "百慕達深海尋寶",
-    "image": "images/HU018.jpg",
+    "image": "images/HU018.webp",
     "players": "３－６人",
     "duration": "１５分鐘",
     "age": "１０歲以上",
@@ -473,7 +473,7 @@ window.products = [
   {
     "code": "HU019",
     "name": "飛天奇異鳥",
-    "image": "images/HU019.jpg",
+    "image": "images/HU019.webp",
     "players": "２－４人",
     "duration": "１０分鐘",
     "age": "５歲以上",
@@ -496,7 +496,7 @@ window.products = [
   {
     "code": "HU020",
     "name": "MOTTO對對碰",
-    "image": "images/HU020.jpg",
+    "image": "images/HU020.webp",
     "players": "２－４人",
     "duration": "１５分鐘",
     "age": "８歲以上",
@@ -523,7 +523,7 @@ window.products = [
   {
     "code": "HU021",
     "name": "生命之符",
-    "image": "images/HU021.jpg",
+    "image": "images/HU021.webp",
     "players": "２－５人",
     "duration": "３０分鐘",
     "age": "８歲以上",
@@ -544,7 +544,7 @@ window.products = [
   {
     "code": "HU022",
     "name": "小雞大逃亡",
-    "image": "images/HU022.jpg",
+    "image": "images/HU022.webp",
     "players": "１－４人",
     "duration": "２０分鐘",
     "age": "６歲以上",
@@ -568,7 +568,7 @@ window.products = [
   {
     "code": "HU023",
     "name": "七彩蝴蝶一家親",
-    "image": "images/HU023.jpg",
+    "image": "images/HU023.webp",
     "players": "２－４人",
     "duration": "２０分鐘",
     "age": "５歲以上",
@@ -588,7 +588,7 @@ window.products = [
   {
     "code": "HU024",
     "name": "搗蛋小地精",
-    "image": "images/HU024.jpg",
+    "image": "images/HU024.webp",
     "players": "２－４人",
     "duration": "３０分鐘",
     "age": "５歲以上",
@@ -609,7 +609,7 @@ window.products = [
   {
     "code": "HU025",
     "name": "球球實驗室",
-    "image": "images/HU025.jpg",
+    "image": "images/HU025.webp",
     "players": "１人",
     "duration": "１０分鐘",
     "age": "７歲以上",
@@ -633,7 +633,7 @@ window.products = [
   {
     "code": "HU026",
     "name": "小怪獸音樂會",
-    "image": "images/HU026.jpg",
+    "image": "images/HU026.webp",
     "players": "２－４人",
     "duration": "２０分鐘",
     "age": "６歲以上",
@@ -656,7 +656,7 @@ window.products = [
   {
     "code": "HU027",
     "name": "皇位紛爭",
-    "image": "images/HU027.jpg",
+    "image": "images/HU027.webp",
     "players": "２－４人",
     "duration": "２０－３０分鐘",
     "age": "８歲以上",
@@ -677,7 +677,7 @@ window.products = [
   {
     "code": "HU028",
     "name": "烏姆",
-    "image": "images/HU028.jpg",
+    "image": "images/HU028.webp",
     "players": "２－４人",
     "duration": "６０分鐘",
     "age": "１０歲以上",
@@ -704,7 +704,7 @@ window.products = [
   {
     "code": "HU029",
     "name": "魔塔奇緣",
-    "image": "images/HU029.jpg",
+    "image": "images/HU029.webp",
     "players": "２－４人",
     "duration": "６０分鐘",
     "age": "１０歲以上",
@@ -730,7 +730,7 @@ window.products = [
   {
     "code": "HU030",
     "name": "吹笛魔手",
-    "image": "images/HU030.jpg",
+    "image": "images/HU030.webp",
     "players": "３－５人",
     "duration": "２０分鐘",
     "age": "８歲以上",
@@ -751,7 +751,7 @@ window.products = [
   {
     "code": "HU031",
     "name": "天皇",
-    "image": "images/HU031.jpg",
+    "image": "images/HU031.webp",
     "players": "２－７人",
     "duration": "３０分鐘",
     "age": "８歲以上",
@@ -771,7 +771,7 @@ window.products = [
   {
     "code": "HU032",
     "name": "轉轉謎方 MAX",
-    "image": "images/HU032.jpg",
+    "image": "images/HU032.webp",
     "players": "１人",
     "duration": "１０分鐘",
     "age": "７歲以上",
@@ -790,7 +790,7 @@ window.products = [
   {
     "code": "HU033",
     "name": "貓抓老鼠",
-    "image": "images/HU033.jpg",
+    "image": "images/HU033.webp",
     "players": "３－６人",
     "duration": "１５分鐘",
     "age": "４歲以上",
@@ -810,7 +810,7 @@ window.products = [
   {
     "code": "HU034",
     "name": "哥布林飛車",
-    "image": "images/HU034.jpg",
+    "image": "images/HU034.webp",
     "players": "２－６人",
     "duration": "２０分鐘",
     "age": "８歲以上",
@@ -837,7 +837,7 @@ window.products = [
   {
     "code": "HU035",
     "name": "皇宴爭床記",
-    "image": "images/HU035.jpg",
+    "image": "images/HU035.webp",
     "players": "２－４人",
     "duration": "３０分鐘",
     "age": "１０歲以上",
@@ -859,7 +859,7 @@ window.products = [
   {
     "code": "HU036",
     "name": "秘境尋寶",
-    "image": "images/HU036.jpg",
+    "image": "images/HU036.webp",
     "players": "２－４人",
     "duration": "３０分鐘",
     "age": "９歲以上",
@@ -882,7 +882,7 @@ window.products = [
   {
     "code": "HU037",
     "name": "勇士與睡龍",
-    "image": "images/HU037.jpg",
+    "image": "images/HU037.webp",
     "players": "２－５人",
     "duration": "２０分鐘",
     "age": "６歲以上",
@@ -903,7 +903,7 @@ window.products = [
   {
     "code": "PF001",
     "name": "玩偶騎士團",
-    "image": "images/PF001.jpg",
+    "image": "images/PF001.webp",
     "players": "２－４人",
     "duration": "６０－９０分鐘",
     "age": "８歲以上",
@@ -923,7 +923,7 @@ window.products = [
   {
     "code": "SWG01",
     "name": "星際大戰: 牌庫構築遊戲",
-    "image": "images/SWG01.jpg",
+    "image": "images/SWG01.webp",
     "players": "２人",
     "duration": "３０分鐘",
     "age": "１４歲以上",
