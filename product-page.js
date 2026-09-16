@@ -2,6 +2,7 @@
 (() => {
   "use strict";
 
+  const IMAGE_WIDTHS = {"AS001.webp":[400,800,1200],"DK001.webp":[400,800,996],"ETN001-TCN.webp":[399,798,798],"FU001.webp":[400,800,900],"HU001.webp":[399,798,1197],"HU002.webp":[400,800,900],"HU003.webp":[399,798,1018],"HU004.webp":[400,800,1200],"HU005.webp":[400,800,1200],"HU006.webp":[281,562,843],"HU007.webp":[400,440,440],"HU008.webp":[400,440,440],"HU009.webp":[400,800,900],"HU010.webp":[399,440,440],"HU011.webp":[400,440,440],"HU012.webp":[400,440,440],"HU013.webp":[400,440,440],"HU014.webp":[400,520,520],"HU015.webp":[400,519,519],"HU016.webp":[400,440,440],"HU017.webp":[369,737,1106],"HU018.webp":[399,798,1197],"HU019.webp":[399,799,1198],"HU020.webp":[400,800,1024],"HU021.webp":[245,245,245],"HU022.webp":[247,247,247],"HU023.webp":[400,800,889],"HU024.webp":[247,247,247],"HU025.webp":[378,756,833],"HU026.webp":[247,247,247],"HU027.webp":[247,247,247],"HU028.webp":[399,799,1198],"HU029.webp":[400,800,1200],"HU030.webp":[310,621,931],"HU031.webp":[311,621,932],"HU032.webp":[321,643,643],"HU033.webp":[394,787,1181],"HU034.webp":[400,800,1200],"HU035.webp":[400,800,1200],"HU036.webp":[284,567,851],"HU037.webp":[398,797,1195],"PF001.webp":[400,800,822],"SWG01.webp":[305,610,824]};
   const el = {};
   document.addEventListener("DOMContentLoaded", init);
 
@@ -56,8 +57,26 @@
     }
 
     const image = clean(product.image) || `images/${code}.jpg`;
-    el.productImage.src = image;
+    // V6：僅對本專案已有縮圖的 WebP 圖片提供響應式版本；其餘路徑保留原樣。
+    const filename = image.split("/").pop();
+    const responsive = /^images\/[^/]+\.webp$/i.test(image);
     el.productImage.alt = name;
+    el.productImage.loading = "eager";
+    el.productImage.fetchPriority = "high";
+    el.productImage.decoding = "async";
+    if (responsive) {
+      const widths = IMAGE_WIDTHS[filename];
+      el.productImage.sizes = "(max-width: 760px) calc(100vw - 44px), 388px";
+      el.productImage.srcset = [
+        `images/thumbs/${filename} ${widths[0]}w`,
+        `images/medium/${filename} ${widths[1]}w`,
+        `${image} ${widths[2]}w`
+      ].join(", ");
+    } else {
+      el.productImage.removeAttribute("srcset");
+      el.productImage.removeAttribute("sizes");
+    }
+    el.productImage.src = image;
 
     renderDescription(product.description);
     renderResources(product);
